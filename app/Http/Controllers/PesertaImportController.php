@@ -13,51 +13,96 @@ class PesertaImportController extends Controller
         return view('peserta.index');
     }
 
-    public function import(Request $request)
+    public function preview(Request $request)
     {
-        // Validasi file yang di-upload
         $request->validate([
             'file' => 'required|mimes:xlsx,xls',
         ]);
 
-        // Ambil file yang di-upload
         $file = $request->file('file');
-        
-        // Load file Excel menggunakan PhpSpreadsheet
         $spreadsheet = IOFactory::load($file);
         $sheet = $spreadsheet->getActiveSheet();
 
-        // Ambil data mulai dari baris ke-2 dan kolom ke-2 (skip baris pertama dan kolom pertama)
-        $data = [];
-        foreach ($sheet->getRowIterator(2) as $row) { // Mulai dari baris ke-2
+        $validData = [];
+        $invalidData = [];
+        $rowNumber = 1;
+
+        foreach ($sheet->getRowIterator(2) as $row) {
+            $rowNumber++;
             $cellIterator = $row->getCellIterator();
-            $cellIterator->setIterateOnlyExistingCells(FALSE);
+            $cellIterator->setIterateOnlyExistingCells(false);
 
             $rowData = [];
             foreach ($cellIterator as $cell) {
                 $rowData[] = $cell->getValue();
             }
 
-            // Skip kolom pertama (index 0) dan masukkan data ke dalam array
-            if (!empty($rowData[1])) {
-                $data[] = [
-                    'nomor_peserta' => $rowData[1],  // Kolom ke-2
-                    'nama_peserta'  => $rowData[2],  // Kolom ke-3
-                    'alamat'        => $rowData[3],  // Kolom ke-4
-                    'kecamatan'     => $rowData[4],  // Kolom ke-5
-                    'rombongan'     => $rowData[5],  // Kolom ke-6
-                    'regu'          => $rowData[6],  // Kolom ke-7
-                    'keterangan'    => $rowData[7],  // Kolom ke-8
-                    'kloter'        => $rowData[8],  // Kolom ke-9
-                ];
+            // Skip jika seluruh kolom kosong
+            if (empty(array_filter($rowData))) {
+                continue;
+            }
+
+            // Mapping data
+            $data = [
+                'nomor_peserta' => $rowData[1] ?? null,
+                'nama_peserta'  => $rowData[2] ?? null,
+                'alamat'        => $rowData[3] ?? null,
+                'kecamatan'     => $rowData[4] ?? null,
+                'rombongan'     => $rowData[5] ?? null,
+                'regu'          => $rowData[6] ?? null,
+                'keterangan'    => $rowData[7] ?? null,
+                'kloter'        => $rowData[8] ?? null,
+            ];
+
+            // Validasi sederhana
+            if (!empty($data['nomor_peserta']) && !empty($data['nama_peserta'])) {
+                $validData[] = $data;
+            } else {
+                $data['error'] = 'Nomor peserta atau nama peserta kosong';
+                $invalidData[] = $data;
             }
         }
 
-        // Insert data ke dalam database
-        foreach ($data as $row) {
-            Peserta::create($row);
-        }
+        // Simpan sementara ke session
+        session([
+            'valid_import_data' => $validData,
+        ]);
 
-        return redirect()->route('peserta.index')->with('success', 'Data peserta berhasil diimport!');
+        return view('peserta.preview', compact('validData', 'invalidData'));
+    }
+
+
+    public function processImport()
+    {
+        $data = session('valid_import_data', []);
+    
+        $inserted = [];
+        $duplicateData = [];
+    
+        foreach ($data as $row) {
+            // Cek apakah nomor_peserta sudah ada di database
+            if (Peserta::where('nomor_peserta', $row['nomor_peserta'])->exists()) {
+                $duplicateData[] = $row;
+            } else {
+                Peserta::create($row);
+                $inserted[] = $row;
+            }
+        }
+    
+        // Bersihkan session
+        session()->forget('valid_import_data');
+    
+        // Tampilkan halaman hasil import (baik berhasil maupun duplikat)
+        return view('peserta.duplicate', [
+            'insertedData'   => $inserted,
+            'duplicateData'  => $duplicateData,
+        ]);
+    }
+    
+
+    public function cancelImport()
+    {
+        session()->forget('valid_import_data');
+        return redirect()->route('peserta.index');
     }
 }
