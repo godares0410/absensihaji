@@ -17,4 +17,4 @@ Route::get('peserta/print/{id}', [PesertaPrintController::class, 'print'])->name
 Route::get('/peserta', [PesertaImportController::class, 'index'])->name('peserta.index');
 Route::post('/peserta/preview', [PesertaImportController::class, 'preview'])->name('peserta.preview');
 Route::post('/peserta/import', [PesertaImportController::class, 'processImport'])->name('peserta.processImport');
-
+Route::post('/scan/store', [ScanController::class, 'store'])->name('scan.store');

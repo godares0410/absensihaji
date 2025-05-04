@@ -17,7 +17,8 @@ class ScanController extends Controller
         // Ambil peserta yang sudah scan
         $sudahScan = DB::table('scan')
             ->join('peserta', 'scan.id_peserta', '=', 'peserta.id_peserta')
-            ->select('peserta.nama_peserta', 'scan.created_at', 'peserta.foto')
+            ->select('peserta.nama_peserta', 'scan.created_at', 'peserta.foto', 'peserta.nomor_peserta')
+            ->orderBy('scan.updated_at', 'desc')
             ->get()
             ->map(function ($scan) {
                 $scan->waktu_scan = date('H:i:s', strtotime($scan->created_at));
@@ -32,7 +33,7 @@ class ScanController extends Controller
             ->whereNotIn('id_peserta', function ($query) {
                 $query->select('id_peserta')->from('scan');
             })
-            ->select('nama_peserta', 'foto')
+            ->select('nama_peserta', 'foto', 'nomor_peserta')
             ->get();
 
         // Hitung jumlah
