@@ -142,6 +142,46 @@ use Illuminate\Support\Facades\DB;
                 padding: 15px;
             }
         }
+
+        .peserta-list {
+            display: grid;
+            gap: 8px;
+        }
+
+        .peserta-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .peserta-item:hover {
+            background-color: #e9ecef;
+            transform: translateX(2px);
+        }
+
+        .peserta-nama {
+            font-weight: 500;
+            color: #343a40;
+        }
+
+        .peserta-nomor {
+            font-size: 0.8rem;
+            background-color: white;
+            padding: 3px 6px;
+        }
+
+        .detail-regu {
+            transition: all 0.3s;
+        }
+
+        .detail-regu:hover {
+            background-color: #f8f9fa;
+        }
     </style>
 </head>
 
@@ -275,11 +315,11 @@ use Illuminate\Support\Facades\DB;
                                             @endphp
 
                                             @foreach($regus as $regu)
-                                            <div class="p-3 detail-regu">
+                                            <div class="p-3 detail-regu border-bottom">
                                                 <div class="d-flex justify-content-between align-items-center mb-2">
                                                     <h6 class="mb-0">Regu {{ $regu->regu }} ({{ $regu->total }} peserta)</h6>
                                                     <button class="btn btn-sm btn-outline-primary" onclick="showPesertaBelumScan({{ $rombongan->rombongan }}, {{ $regu->regu }})">
-                                                        <i class="fas fa-list"></i> Lihat Daftar
+                                                        <i class="fas fa-list"></i> Lihat Lengkap
                                                     </button>
                                                 </div>
 
@@ -293,18 +333,23 @@ use Illuminate\Support\Facades\DB;
                                                 ->select('nama_peserta', 'nomor_peserta')
                                                 ->limit(5)
                                                 ->get();
+                                                $counter = 1;
                                                 @endphp
 
-                                                <div class="d-flex flex-wrap">
+                                                <div class="peserta-list">
                                                     @foreach($pesertas as $peserta)
-                                                    <span class="badge badge-light m-1 p-2" onclick="scanPeserta('{{ $peserta->nomor_peserta }}')" style="cursor: pointer;">
-                                                        {{ $peserta->nama_peserta }}
-                                                    </span>
+                                                    <div class="peserta-item" onclick="scanPeserta('{{ $peserta->nomor_peserta }}')">
+                                                        <span class="peserta-no mr-2">{{ $counter++ }}.</span>
+                                                        <span class="peserta-nama">{{ $peserta->nama_peserta }}</span>
+                                                        <span class="peserta-nomor badge badge-light">No. {{ $peserta->nomor_peserta }}</span>
+                                                    </div>
                                                     @endforeach
                                                     @if($regu->total > 5)
-                                                    <span class="badge badge-secondary m-1 p-2">
-                                                        +{{ $regu->total - 5 }} lainnya
-                                                    </span>
+                                                    <div class="text-center mt-2">
+                                                        <span class="badge badge-secondary">
+                                                            +{{ $regu->total - 5 }} peserta lainnya
+                                                        </span>
+                                                    </div>
                                                     @endif
                                                 </div>
                                             </div>
