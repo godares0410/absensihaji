@@ -340,7 +340,7 @@ use Illuminate\Support\Facades\DB;
                                                     @foreach($pesertas as $peserta)
                                                     <div class="peserta-item" onclick="scanPeserta('{{ $peserta->nomor_peserta }}')">
                                                         <span class="peserta-no mr-2">{{ $counter++ }}.</span>
-                                                        <span class="peserta-nama">{{ $peserta->nama_peserta }}</span>
+                                                        <span class="peserta-nama text-left flex-grow-1">{{ $peserta->nama_peserta }}</span>
                                                         <span class="peserta-nomor badge badge-light">No. {{ $peserta->nomor_peserta }}</span>
                                                     </div>
                                                     @endforeach
