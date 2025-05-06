@@ -18,3 +18,5 @@ Route::get('/peserta', [PesertaImportController::class, 'index'])->name('peserta
 Route::post('/peserta/preview', [PesertaImportController::class, 'preview'])->name('peserta.preview');
 Route::post('/peserta/import', [PesertaImportController::class, 'processImport'])->name('peserta.processImport');
 Route::post('/scan/store', [ScanController::class, 'store'])->name('scan.store');
+Route::get('/scan/belum-scan', [ScanController::class, 'getBelumScan']);
+Route::resource('scan', ScanController::class)->only(['index', 'store']);

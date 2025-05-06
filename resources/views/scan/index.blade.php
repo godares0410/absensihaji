@@ -1,14 +1,18 @@
+@php
+use Illuminate\Support\Facades\DB;
+@endphp
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Form dengan List</title>
+    <title>Scan Peserta</title>
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome untuk ikon -->
+    <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <!-- HTML5 QR Code Scanner -->
     <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -28,81 +32,6 @@
             padding: 25px;
             border-radius: 12px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            height: 100%;
-        }
-
-        .list-group-item {
-            border: none;
-            margin-bottom: 10px;
-            border-radius: 10px;
-            transition: transform 0.2s, box-shadow 0.2s;
-            background: #fff;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .list-group-item:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        }
-
-        .media img {
-            border-radius: 50%;
-            border: 2px solid #007bff;
-            width: 50px;
-            height: 50px;
-            object-fit: cover;
-            /* Add blur effect while loading */
-            filter: blur(2px);
-            transition: filter 0.3s ease;
-        }
-
-        .media img.loaded {
-            filter: blur(0);
-        }
-
-        .nav-tabs .nav-link {
-            border: none;
-            color: #495057;
-            font-weight: 500;
-            border-radius: 10px 10px 0 0;
-            transition: background 0.3s, color 0.3s;
-            padding: 10px 20px;
-        }
-
-        .nav-tabs .nav-link.active {
-            background: #007bff;
-            color: #fff;
-            border-radius: 10px 10px 0 0;
-        }
-
-        .nav-tabs .nav-link:hover:not(.active) {
-            background: #e9ecef;
-        }
-
-        .tab-content {
-            background: #fff;
-            padding: 20px;
-            border-radius: 0 10px 10px 10px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-
-        .btn-primary {
-            background: #007bff;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            transition: background 0.3s;
-            font-weight: 500;
-        }
-
-        .btn-primary:hover {
-            background: #0056b3;
-        }
-
-        .scan-time {
-            font-size: 14px;
-            color: #6c757d;
-            margin-top: 5px;
         }
 
         .info-box {
@@ -113,105 +42,77 @@
             margin-bottom: 20px;
         }
 
-        .info-box h5 {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 15px;
-            color: #343a40;
-        }
-
-        .info-box p {
-            font-size: 16px;
-            margin: 0;
-            color: #6c757d;
-            font-weight: 500;
-        }
-
-        .info-box p strong {
-            color: #343a40;
-        }
-
-        .form-group label {
-            font-weight: 500;
-            color: #343a40;
-        }
-
-        .form-control {
-            border-radius: 8px;
-            padding: 10px;
-            border: 1px solid #ced4da;
-            transition: border-color 0.3s, box-shadow 0.3s;
-        }
-
-        .form-control:focus {
-            border-color: #007bff;
-            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
-        }
-
-        .fa-spin {
-            animation: fa-spin 1s infinite linear;
-        }
-
-        @keyframes fa-spin {
-            0% {
-                transform: rotate(0deg);
-            }
-
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-
-        /* Participant number styling */
-        .participant-number {
-            display: inline-block;
-            background: #e9ecef;
-            padding: 3px 8px;
-            border-radius: 15px;
-            font-size: 12px;
+        .nav-tabs .nav-link {
+            border: none;
             color: #495057;
-            margin-right: 8px;
-            white-space: nowrap;
-            max-width: 120px;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            font-weight: 500;
+            border-radius: 10px 10px 0 0;
+            padding: 10px 20px;
         }
 
-        /* Scrollable container for participant numbers */
-        .scrollable-number {
-            display: flex;
-            overflow-x: auto;
-            padding-bottom: 5px;
-            margin-bottom: 5px;
+        .nav-tabs .nav-link.active {
+            background: #007bff;
+            color: #fff;
         }
 
-        .scrollable-number::-webkit-scrollbar {
-            height: 5px;
+        .tab-content {
+            background: #fff;
+            padding: 20px;
+            border-radius: 0 10px 10px 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
 
-        .scrollable-number::-webkit-scrollbar-track {
-            background: #f1f1f1;
+        .list-group-item {
+            border: none;
+            margin-bottom: 10px;
             border-radius: 10px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
         }
 
-        .scrollable-number::-webkit-scrollbar-thumb {
-            background: #888;
-            border-radius: 10px;
+        .media img {
+            border-radius: 50%;
+            border: 2px solid #007bff;
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
         }
 
-        .scrollable-number::-webkit-scrollbar-thumb:hover {
-            background: #555;
+        .badge-rombongan {
+            background-color: #17a2b8;
+            color: white;
         }
 
-        /* Search box styling */
+        .badge-regu {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .detail-rombongan {
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .detail-rombongan:hover {
+            background-color: #f8f9fa;
+        }
+
+        .detail-regu {
+            padding-left: 30px;
+            background-color: #f8f9fa;
+            border-left: 4px solid #007bff;
+        }
+
+        .collapse-icon {
+            transition: transform 0.3s;
+        }
+
+        .collapsed .collapse-icon {
+            transform: rotate(-90deg);
+        }
+
         .search-box {
-            margin-bottom: 15px;
             position: relative;
-        }
-
-        .search-box .form-control {
-            padding-left: 40px;
-            border-radius: 20px;
+            margin-bottom: 15px;
         }
 
         .search-box i {
@@ -219,24 +120,25 @@
             left: 15px;
             top: 12px;
             color: #6c757d;
-            z-index: 10;
         }
 
-        /* Responsive adjustments */
+        .search-box input {
+            padding-left: 40px;
+            border-radius: 20px;
+        }
+
+        #qr-reader {
+            width: 100%;
+            display: none;
+            margin-top: 15px;
+        }
+
         @media (max-width: 768px) {
             .container {
                 margin-top: 15px;
             }
-            
+
             .form-container {
-                padding: 15px;
-            }
-            
-            .info-box {
-                padding: 15px;
-            }
-            
-            .tab-content {
                 padding: 15px;
             }
         }
@@ -254,13 +156,6 @@
                         @csrf
                         <div class="form-group">
                             <label for="kode">Kode Peserta</label>
-                            <!-- <div class="scrollable-number mb-2">
-                                @foreach($belumScan as $peserta)
-                                <span class="participant-number" title="{{ $peserta->nomor_peserta }}" onclick="document.getElementById('kode').value = '{{ $peserta->nomor_peserta }}'">
-                                    {{ $peserta->nomor_peserta }}
-                                </span>
-                                @endforeach
-                            </div> -->
                             <input type="text" class="form-control" id="kode" name="kode" placeholder="Masukkan kode peserta" required>
                         </div>
                         <div class="d-flex justify-content-between">
@@ -272,55 +167,52 @@
                             </button>
                         </div>
                     </form>
-                    <div id="qr-reader" style="width:100%; display:none;" class="mt-3"></div>
+                    <div id="qr-reader"></div>
                 </div>
             </div>
 
-            <!-- Daftar Sudah Scan dan Belum Scan -->
+            <!-- Daftar Scan -->
             <div class="col-md-6 mb-4">
                 <div class="form-container">
                     <h2 class="mb-4" style="color: #343a40; font-weight: 600;">Status Scan</h2>
 
-                    <!-- Informasi Tambahan -->
                     <div class="info-box">
                         <h5>Informasi Scan</h5>
                         <div class="d-flex justify-content-between">
-                            <p><strong>Total Peserta:</strong> {{ $totalPeserta }}</p>
+                            <p><strong>Total:</strong> {{ $totalPeserta }}</p>
                             <p><strong>Sudah Scan:</strong> {{ $totalSudahScan }}</p>
                             <p><strong>Belum Scan:</strong> {{ $totalBelumScan }}</p>
                         </div>
                     </div>
 
-                    <!-- Tab Navigation -->
-                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <ul class="nav nav-tabs" id="myTab" role="tablist" style="overflow-x: auto; white-space: nowrap; flex-wrap: nowrap;">
                         <li class="nav-item">
-                            <a class="nav-link active" id="sudah-scan-tab" data-toggle="tab" href="#sudah-scan" role="tab" aria-controls="sudah-scan" aria-selected="true">Sudah Scan</a>
+                            <a class="nav-link active" id="sudah-scan-tab" data-toggle="tab" href="#sudah-scan" role="tab">Sudah Scan</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="belum-scan-tab" data-toggle="tab" href="#belum-scan" role="tab" aria-controls="belum-scan" aria-selected="false">Belum Scan</a>
+                            <a class="nav-link" id="belum-scan-tab" data-toggle="tab" href="#belum-scan" role="tab">Belum Scan</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="detail-scan-tab" data-toggle="tab" href="#detail-scan" role="tab">Detail Belum Scan</a>
                         </li>
                     </ul>
 
-                    <!-- Tab Content -->
                     <div class="tab-content" id="myTabContent">
                         <!-- Sudah Scan -->
-                        <div class="tab-pane fade show active" id="sudah-scan" role="tabpanel" aria-labelledby="sudah-scan-tab">
+                        <div class="tab-pane fade show active" id="sudah-scan" role="tabpanel">
                             <div class="list-group mt-3" style="max-height: 400px; overflow-y: auto;">
                                 @foreach($sudahScan as $scan)
                                 <div class="list-group-item">
                                     <div class="media">
-                                        <img src="{{ asset('image/' . ($scan->foto ?? 'icon.png')) }}"
-                                            class="mr-3 lazy"
-                                            alt="Foto"
-                                            loading="lazy"
-                                            onload="this.classList.add('loaded')"
-                                            width="50"
-                                            height="50">
+                                        <img src="{{ asset('image/' . ($scan->foto ?? 'icon.png')) }}" class="mr-3">
                                         <div class="media-body">
-                                            <h5 class="mt-0 mb-1" style="color: #343a40; font-weight: 600;">{{ $scan->nama_peserta }}</h5>
+                                            <h5 class="mt-0 mb-1">{{ $scan->nama_peserta }}</h5>
                                             <div class="d-flex justify-content-between align-items-center">
-                                                <!-- <span class="participant-number">{{ $scan->nomor_peserta }}</span> -->
-                                                <div class="scan-time">{{ $scan->waktu_scan }}</div>
+                                                <div>
+                                                    <span class="badge badge-rombongan">Rombongan {{ $scan->rombongan }}</span>
+                                                    <span class="badge badge-regu">Regu {{ $scan->regu }}</span>
+                                                </div>
+                                                <div class="text-muted small">{{ $scan->waktu_scan }}</div>
                                             </div>
                                         </div>
                                     </div>
@@ -330,7 +222,7 @@
                         </div>
 
                         <!-- Belum Scan -->
-                        <div class="tab-pane fade" id="belum-scan" role="tabpanel" aria-labelledby="belum-scan-tab">
+                        <div class="tab-pane fade" id="belum-scan" role="tabpanel">
                             <div class="search-box">
                                 <i class="fas fa-search"></i>
                                 <input type="text" class="form-control" id="searchBelumScan" placeholder="Cari nama peserta...">
@@ -339,21 +231,84 @@
                                 @foreach($belumScan as $peserta)
                                 <div class="list-group-item" data-name="{{ strtolower($peserta->nama_peserta) }}">
                                     <div class="media">
-                                        <img src="{{ asset('image/' . ($scan->foto ?? 'icon.png')) }}"
-                                            class="mr-3 lazy"
-                                            alt="Foto"
-                                            loading="lazy"
-                                            onload="this.classList.add('loaded')"
-                                            width="50"
-                                            height="50">
+                                        <img src="{{ asset('image/' . ($peserta->foto ?? 'icon.png')) }}" class="mr-3">
                                         <div class="media-body">
-                                            <h5 class="mt-0 mb-1" style="color: #343a40; font-weight: 600;">{{ $peserta->nama_peserta }}</h5>
+                                            <h5 class="mt-0 mb-1">{{ $peserta->nama_peserta }}</h5>
                                             <div class="d-flex justify-content-between align-items-center">
-                                                <!-- <span class="participant-number">{{ $peserta->nomor_peserta }}</span> -->
+                                                <div>
+                                                    <span class="badge badge-rombongan">Rombongan {{ $peserta->rombongan }}</span>
+                                                    <span class="badge badge-regu">Regu {{ $peserta->regu }}</span>
+                                                </div>
                                                 <button class="btn btn-primary btn-sm" onclick="scanPeserta('{{ $peserta->nomor_peserta }}')">
                                                     <i class="fas fa-check"></i> Scan
                                                 </button>
                                             </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                @endforeach
+                            </div>
+                        </div>
+
+                        <!-- Detail Belum Scan -->
+                        <div class="tab-pane fade" id="detail-scan" role="tabpanel">
+                            <div class="mt-3" style="max-height: 500px; overflow-y: auto;">
+                                @foreach($rombonganStats as $rombongan)
+                                <div class="card mb-2">
+                                    <div class="card-header detail-rombongan" data-toggle="collapse" href="#collapseRombongan{{ $rombongan->rombongan }}">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <h5 class="mb-0">Rombongan {{ $rombongan->rombongan }} ({{ $rombongan->total }} peserta)</h5>
+                                            <i class="fas fa-chevron-down collapse-icon"></i>
+                                        </div>
+                                    </div>
+                                    <div class="collapse" id="collapseRombongan{{ $rombongan->rombongan }}">
+                                        <div class="card-body p-0">
+                                            @php
+                                            $regus = DB::table('peserta')
+                                            ->whereNotIn('id_peserta', function($query) {
+                                            $query->select('id_peserta')->from('scan');
+                                            })
+                                            ->where('rombongan', $rombongan->rombongan)
+                                            ->select('regu', DB::raw('count(*) as total'))
+                                            ->groupBy('regu')
+                                            ->get();
+                                            @endphp
+
+                                            @foreach($regus as $regu)
+                                            <div class="p-3 detail-regu">
+                                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                                    <h6 class="mb-0">Regu {{ $regu->regu }} ({{ $regu->total }} peserta)</h6>
+                                                    <button class="btn btn-sm btn-outline-primary" onclick="showPesertaBelumScan({{ $rombongan->rombongan }}, {{ $regu->regu }})">
+                                                        <i class="fas fa-list"></i> Lihat Daftar
+                                                    </button>
+                                                </div>
+
+                                                @php
+                                                $pesertas = DB::table('peserta')
+                                                ->whereNotIn('id_peserta', function($query) {
+                                                $query->select('id_peserta')->from('scan');
+                                                })
+                                                ->where('rombongan', $rombongan->rombongan)
+                                                ->where('regu', $regu->regu)
+                                                ->select('nama_peserta', 'nomor_peserta')
+                                                ->limit(5)
+                                                ->get();
+                                                @endphp
+
+                                                <div class="d-flex flex-wrap">
+                                                    @foreach($pesertas as $peserta)
+                                                    <span class="badge badge-light m-1 p-2" onclick="scanPeserta('{{ $peserta->nomor_peserta }}')" style="cursor: pointer;">
+                                                        {{ $peserta->nama_peserta }}
+                                                    </span>
+                                                    @endforeach
+                                                    @if($regu->total > 5)
+                                                    <span class="badge badge-secondary m-1 p-2">
+                                                        +{{ $regu->total - 5 }} lainnya
+                                                    </span>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                            @endforeach
                                         </div>
                                     </div>
                                 </div>
@@ -366,24 +321,39 @@
         </div>
     </div>
 
-    <!-- Bootstrap JS dan dependencies -->
+    <!-- Modal -->
+    <div class="modal fade" id="pesertaModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Daftar Peserta Belum Scan</h5>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="list-group" id="modalPesertaList"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-    <!-- Lazysizes for lazy loading images -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.3.2/lazysizes.min.js" async></script>
-
     <script>
-        // Handle form submission
+        // Form submission
         $('form').on('submit', function(e) {
             e.preventDefault();
-
             const form = $(this);
             const submitBtn = form.find('button[type="submit"]');
             const originalBtnText = submitBtn.html();
 
-            // Show loading state
             submitBtn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Processing...');
 
             $.ajax({
@@ -398,27 +368,19 @@
                             title: 'Berhasil!',
                             html: `Scan berhasil untuk <b>${response.data.nama_peserta}</b><br>Waktu: ${response.data.waktu_scan}`,
                             timer: 3000,
-                            timerProgressBar: true,
-                            willClose: () => {
-                                location.reload(); // Refresh to update the lists
-                            }
+                            willClose: () => location.reload()
                         });
                     } else {
                         Swal.fire({
                             icon: 'error',
                             title: 'Gagal!',
                             text: response.message,
-                            timer: 3000,
-                            timerProgressBar: true
+                            timer: 3000
                         });
                     }
                 },
                 error: function(xhr) {
-                    let message = 'Terjadi kesalahan saat memproses scan';
-                    if (xhr.responseJSON && xhr.responseJSON.message) {
-                        message = xhr.responseJSON.message;
-                    }
-
+                    const message = xhr.responseJSON?.message || 'Terjadi kesalahan saat memproses scan';
                     Swal.fire({
                         icon: 'error',
                         title: 'Gagal!',
@@ -431,13 +393,12 @@
             });
         });
 
-        // QR Scanner functionality
+        // QR Scanner
         document.getElementById("openCamera").addEventListener("click", function() {
             const qrReader = document.getElementById("qr-reader");
             qrReader.style.display = "block";
 
             const html5QrCode = new Html5Qrcode("qr-reader");
-
             html5QrCode.start({
                     facingMode: "environment"
                 }, {
@@ -445,51 +406,40 @@
                     qrbox: 250
                 },
                 qrCodeMessage => {
-                    // QR code terdeteksi
                     document.getElementById("kode").value = qrCodeMessage;
                     html5QrCode.stop();
                     qrReader.style.display = "none";
-
-                    // Submit form after QR detected
                     $('form').submit();
                 },
-                errorMessage => {
-                    console.log(`QR error: ${errorMessage}`);
-                }
+                errorMessage => console.log(`QR error: ${errorMessage}`)
             ).catch(err => {
                 Swal.fire({
                     icon: 'error',
                     title: 'Kamera Error',
                     text: 'Gagal mengakses kamera: ' + err.message
                 });
-                console.log("Error memulai kamera:", err);
             });
         });
 
-        // Search functionality for Belum Scan tab
+        // Search functionality
         $('#searchBelumScan').on('input', function() {
             const searchTerm = $(this).val().toLowerCase();
             $('#belumScanList .list-group-item').each(function() {
                 const participantName = $(this).data('name');
-                if (participantName.includes(searchTerm)) {
-                    $(this).show();
-                } else {
-                    $(this).hide();
-                }
+                $(this).toggle(participantName.includes(searchTerm));
             });
         });
 
-        // Function to scan participant
+        // Scan participant
         function scanPeserta(nomorPeserta) {
             Swal.fire({
                 title: 'Konfirmasi Scan',
-                text: `Apakah Anda yakin ingin melakukan scan untuk peserta ini?`,
+                text: `Scan peserta ini?`,
                 icon: 'question',
                 showCancelButton: true,
                 confirmButtonColor: '#007bff',
                 cancelButtonColor: '#6c757d',
-                confirmButtonText: 'Ya, Scan',
-                cancelButtonText: 'Batal'
+                confirmButtonText: 'Ya, Scan'
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
@@ -507,27 +457,19 @@
                                     title: 'Berhasil!',
                                     html: `Scan berhasil untuk <b>${response.data.nama_peserta}</b><br>Waktu: ${response.data.waktu_scan}`,
                                     timer: 3000,
-                                    timerProgressBar: true,
-                                    willClose: () => {
-                                        location.reload();
-                                    }
+                                    willClose: () => location.reload()
                                 });
                             } else {
                                 Swal.fire({
                                     icon: 'error',
                                     title: 'Gagal!',
                                     text: response.message,
-                                    timer: 3000,
-                                    timerProgressBar: true
+                                    timer: 3000
                                 });
                             }
                         },
                         error: function(xhr) {
-                            let message = 'Terjadi kesalahan saat memproses scan';
-                            if (xhr.responseJSON && xhr.responseJSON.message) {
-                                message = xhr.responseJSON.message;
-                            }
-
+                            const message = xhr.responseJSON?.message || 'Terjadi kesalahan saat memproses scan';
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Gagal!',
@@ -539,14 +481,75 @@
             });
         }
 
-        // Show any flash messages from server
+        // Show peserta belum scan in modal
+        function showPesertaBelumScan(rombongan, regu) {
+            // console.log('Requesting data for rombongan:', rombongan, 'regu:', regu);
+
+            $.ajax({
+                url: '/scan/belum-scan',
+                type: 'GET',
+                data: {
+                    rombongan: rombongan,
+                    regu: regu
+                },
+                dataType: 'json',
+                success: function(response) {
+                    console.log('Response:', response);
+                    if (response.success) {
+                        let html = '';
+                        if (response.data.length > 0) {
+                            response.data.forEach(peserta => {
+                                html += `
+                        <div class="list-group-item">
+                            <div class="media">
+                                <img src="{{ asset('image') }}/${peserta.foto || 'icon.png'}" 
+                                     class="mr-3" width="50" height="50">
+                                <div class="media-body">
+                                    <h5>${peserta.nama_peserta}</h5>
+                                    <div>
+                                        <span class="badge bg-info" style="color: white;">Rombongan ${peserta.rombongan}</span>
+                                        <span class="badge bg-secondary" style="color: white;">Regu ${peserta.regu}</span>
+                                        <span class="badge bg-primary" style="color: white;">No. ${peserta.nomor_peserta}</span>
+                                    </div>
+                                    <button class="btn btn-sm btn-primary mt-2" 
+                                            onclick="scanPeserta('${peserta.nomor_peserta}')">
+                                        <i class="fas fa-check"></i> Scan
+                                    </button>
+                                </div>
+                            </div>
+                        </div>`;
+                            });
+                        } else {
+                            html = '<div class="alert alert-info">Tidak ada peserta yang ditemukan</div>';
+                        }
+                        $('#modalPesertaList').html(html);
+                        $('#pesertaModal').modal('show');
+                    } else {
+                        Swal.fire('Error', response.message, 'error');
+                    }
+                },
+                error: function(xhr) {
+                    console.error('AJAX Error:', xhr.responseText);
+                    let errorMsg = 'Gagal memuat data peserta';
+                    try {
+                        const response = JSON.parse(xhr.responseText);
+                        if (response.error) {
+                            errorMsg += ': ' + response.error;
+                        }
+                    } catch (e) {}
+                    Swal.fire('Error', errorMsg, 'error');
+                }
+            });
+        }
+
+        // Flash messages
         @if(session('success'))
         Swal.fire({
             icon: 'success',
             title: 'Berhasil!',
-            text: '{{ session('success') }}',
-            timer: 3000,
-            timerProgressBar: true
+            text: '{{ session('
+            success ') }}',
+            timer: 3000
         });
         @endif
 
@@ -554,9 +557,9 @@
         Swal.fire({
             icon: 'error',
             title: 'Gagal!',
-            text: '{{ session('error') }}',
-            timer: 3000,
-            timerProgressBar: true
+            text: '{{ session('
+            error ') }}',
+            timer: 3000
         });
         @endif
     </script>
