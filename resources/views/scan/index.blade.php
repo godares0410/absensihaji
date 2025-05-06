@@ -216,14 +216,30 @@ use Illuminate\Support\Facades\DB;
                 <div class="form-container">
                     <h2 class="mb-4" style="color: #343a40; font-weight: 600;">Status Scan</h2>
 
-                    <div class="info-box">
-                        <h5>Informasi Scan</h5>
-                        <div class="d-flex justify-content-between">
-                            <p><strong>Total:</strong> {{ $totalPeserta }}</p>
-                            <p><strong>Sudah Scan:</strong> {{ $totalSudahScan }}</p>
-                            <p><strong>Belum Scan:</strong> {{ $totalBelumScan }}</p>
+                    <div class="info-box p-4 border rounded-3 shadow-sm bg-white mb-4">
+                        <h5 class="text-center fw-bold mb-4">Informasi Scan</h5>
+                        <div class="row text-center gy-3">
+                            <div class="col-12 col-md-4">
+                                <div class="border rounded py-2 px-3 bg-light">
+                                    <p class="mb-1 text-muted">Total</p>
+                                    <h6 class="mb-0 fw-semibold">{{ $totalPeserta }}</h6>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-4">
+                                <div class="border rounded py-2 px-3 bg-light">
+                                    <p class="mb-1 text-muted">Sudah Scan</p>
+                                    <h6 class="mb-0 text-success fw-semibold">{{ $totalSudahScan }}</h6>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-4">
+                                <div class="border rounded py-2 px-3 bg-light">
+                                    <p class="mb-1 text-muted">Belum Scan</p>
+                                    <h6 class="mb-0 text-danger fw-semibold">{{ $totalBelumScan }}</h6>
+                                </div>
+                            </div>
                         </div>
                     </div>
+
 
                     <ul class="nav nav-tabs" id="myTab" role="tablist" style="overflow-x: auto; white-space: nowrap; flex-wrap: nowrap;">
                         <li class="nav-item">
@@ -280,7 +296,7 @@ use Illuminate\Support\Facades\DB;
                                                     <span class="badge badge-regu">Regu {{ $peserta->regu }}</span>
                                                 </div>
                                                 <button class="btn btn-primary btn-sm" onclick="scanPeserta('{{ $peserta->nomor_peserta }}')">
-                                                    <i class="fas fa-check"></i> Scan
+                                                    <i class="fas fa-check ml-2"></i> Scan
                                                 </button>
                                             </div>
                                         </div>
