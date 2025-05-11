@@ -8,6 +8,8 @@ use App\Http\Controllers\PesertaImportController;
 use App\Http\Controllers\PesertaPrintController;
 use App\Http\Controllers\PesertaController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\AdminUserController;
+use App\Http\Controllers\DatascanController;
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/home', [DashboardController::class, 'index'])->name('home');
@@ -17,7 +19,13 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/data-peserta', [PesertaController::class, 'index'])->name('peserta.index');
     Route::resource('users', UsersController::class);
     Route::resource('peserta', PesertaController::class);
+    Route::get('/data-scan', [DatascanController::class, 'index'])->name('datascan.index');
+    Route::delete('/data-scan/{id_scan}', [DatascanController::class, 'destroy'])->name('scan.destroy');
 });
+Route::get('/admin-users', [AdminUserController::class, 'index'])->name('admin-users.index');
+Route::post('/admin-users', [AdminUserController::class, 'store'])->name('admin-users.store');
+Route::put('/admin-users/{id}', [AdminUserController::class, 'update'])->name('admin-users.update');
+Route::delete('/admin-users/{id}', [AdminUserController::class, 'destroy'])->name('admin-users.destroy');
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);
 Route::resource('scan', ScanController::class);
@@ -26,4 +34,3 @@ Route::get('peserta/print/{id}', [PesertaPrintController::class, 'print'])->name
 Route::post('/scan/store', [ScanController::class, 'store'])->name('scan.store');
 Route::get('/scan/belum-scan', [ScanController::class, 'getBelumScan']);
 Route::resource('scan', ScanController::class)->only(['index', 'store']);
-

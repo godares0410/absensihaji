@@ -2,16 +2,14 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Peserta extends Model
 {
-    use HasFactory;
-
-    // Menentukan primary key
+    protected $table = 'peserta';
     protected $primaryKey = 'id_peserta';
-    protected $table = 'peserta'; // Nama tabel di database
+    public $timestamps = true;
+
     protected $fillable = [
         'nomor_peserta',
         'nama_peserta',
@@ -21,5 +19,11 @@ class Peserta extends Model
         'regu',
         'keterangan',
         'kloter',
+        'foto'
     ];
+
+    public function scans()
+    {
+        return $this->hasMany(Scan::class, 'id_peserta', 'id_peserta');
+    }
 }

@@ -53,7 +53,7 @@
           <p>Jumlah Regu</p>
         </div>
         <div class="icon">
-          <i class="fa fa-users-cog"></i>
+          <i class="fa fa-random"></i>
         </div>
       </div>
     </div>

@@ -21,9 +21,19 @@
                     <i class="fa fa-dashboard"></i> <span>Dashboard</span>
                 </a>
             </li>
-            <li class="{{ request()->is('data-peserta') ? 'active' : '' }}">
+            <li class="{{ request()->is('data-peserta*') ? 'active' : '' }}">
                 <a href="{{ url('/data-peserta') }}">
                     <i class="fa fa-dashboard"></i> <span>Data Peserta</span>
+                </a>
+            </li>
+            <li class="{{ request()->is('data-scan') ? 'active' : '' }}">
+                <a href="{{ url('/data-scan') }}">
+                    <i class="fa fa-dashboard"></i> <span>Data Scan</span>
+                </a>
+            </li>
+            <li class="{{ request()->is('admin-users') ? 'active' : '' }}">
+                <a href="{{ url('/admin-users') }}">
+                    <i class="fa fa-dashboard"></i> <span>User Admin</span>
                 </a>
             </li>
             <!-- Tambahkan menu lainnya di sini -->
