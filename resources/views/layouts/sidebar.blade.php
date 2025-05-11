@@ -31,6 +31,11 @@
                     <i class="fa fa-dashboard"></i> <span>Data Scan</span>
                 </a>
             </li>
+            <li class="{{ request()->is('data-export') ? 'active' : '' }}">
+                <a href="{{ url('/data-export') }}">
+                    <i class="fa fa-dashboard"></i> <span>Data Export</span>
+                </a>
+            </li>
             <li class="{{ request()->is('admin-users') ? 'active' : '' }}">
                 <a href="{{ url('/admin-users') }}">
                     <i class="fa fa-dashboard"></i> <span>User Admin</span>

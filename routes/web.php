@@ -10,6 +10,7 @@ use App\Http\Controllers\PesertaController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\DatascanController;
+use App\Http\Controllers\DataexportController;
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/home', [DashboardController::class, 'index'])->name('home');
@@ -21,6 +22,10 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('peserta', PesertaController::class);
     Route::get('/data-scan', [DatascanController::class, 'index'])->name('datascan.index');
     Route::delete('/data-scan/{id_scan}', [DatascanController::class, 'destroy'])->name('scan.destroy');
+    Route::post('/data-scan/rekap', [DataScanController::class, 'rekap'])->name('datascan.rekap');
+    Route::get('/data-export', [DataexportController::class, 'index'])->name('dataexport.index');
+    Route::delete('/data-export/{nama}', [DataexportController::class, 'destroy'])->name('dataexport.destroy');
+    Route::get('/data-export/export/{nama}/{format}', [DataexportController::class, 'export'])->name('dataexport.export');
 });
 Route::get('/admin-users', [AdminUserController::class, 'index'])->name('admin-users.index');
 Route::post('/admin-users', [AdminUserController::class, 'store'])->name('admin-users.store');

@@ -1,3 +1,4 @@
+<!-- /Users/admin/Documents/absensinew/resources/views/data_scan/index.blade.php -->
 @extends('layouts.app')
 
 @push('styles')
@@ -27,22 +28,33 @@
 
     <div class="box">
         <div class="box-header with-border">
-            <h3 class="box-title">Data Scan Absensi</h3>
-            <div class="pull-right">
-                <form action="{{ route('datascan.index') }}" method="GET" class="form-inline">
-                    <div class="form-group">
-                        <label class="control-label">Status: </label>
-                        <select name="status" class="form-control" onchange="this.form.submit()">
-                            <option value="1" {{ request('status', 1) == 1 ? 'selected' : '' }}>Sudah Scan</option>
-                            <option value="0" {{ request('status', 1) == 0 ? 'selected' : '' }}>Belum Scan</option>
-                        </select>
+            <div class="row">
+                <div class="col-md-6">
+                    <h3 class="box-title">Data Scan Absensi</h3>
+                </div>
+                <div class="col-md-6">
+                    <div class="pull-right" style="display: flex; align-items: center; gap: 10px;">
+                        <button class="btn btn-sm btn-success" data-toggle="modal" data-target="#modalRekapAbsensi" style="white-space: nowrap;">
+                            <i class="fa fa-file-excel-o"></i> Rekap Absensi
+                        </button>
 
+                        <div style="display: flex; align-items: center;">
+                            <form action="{{ route('datascan.index') }}" method="GET" class="form-inline">
+                                <div class="form-group">
+                                    <label class="control-label">Status: </label>
+                                    <select name="status" class="form-control" onchange="this.form.submit()">
+                                        <option value="1" {{ request('status', 1) == 1 ? 'selected' : '' }}>Sudah Scan</option>
+                                        <option value="0" {{ request('status', 1) == 0 ? 'selected' : '' }}>Belum Scan</option>
+                                    </select>
+                                </div>
+                            </form>
+                        </div>
                     </div>
-                </form>
+                </div>
             </div>
         </div>
         <div class="box-body table-responsive">
-            <table class="table table-bordered table-striped">
+            <table class="table table-bordered table-striped" id="scanTable">
                 <thead>
                     <tr>
                         <th style="width: 20px">No</th>
@@ -52,8 +64,10 @@
                         <th>Rombongan</th>
                         <th>Regu</th>
                         <th>Kloter</th>
+                        @if(request('status', 1) == 1)
                         <th>Waktu Scan</th>
                         <th class="text-center">Aksi</th>
+                        @endif
                     </tr>
                 </thead>
                 <tbody>
@@ -66,13 +80,15 @@
                         <td>{{ $scan->rombongan ?? '-' }}</td>
                         <td>{{ $scan->regu ?? '-' }}</td>
                         <td>{{ $scan->kloter ?? '-' }}</td>
+                        @if(request('status', 1) == 1)
                         <td>{{ $scan->waktu_scan }}</td>
                         <td class="text-center">
                             <button type="button" class="btn btn-danger btn-sm btn-delete-scan"
                                 data-id="{{ $scan->id_scan }}">
-                                Hapus
+                                <i class="fa fa-trash"></i> Hapus
                             </button>
                         </td>
+                        @endif
                     </tr>
                     @endforeach
                 </tbody>
@@ -110,6 +126,31 @@
         </form>
     </div>
 </div>
+
+<!-- Modal Rekap Absensi -->
+<div class="modal fade" id="modalRekapAbsensi" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <form action="{{ route('datascan.rekap') }}" method="POST">
+            @csrf
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Rekap Absensi</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Beri Nama Absensi:</label>
+                        <input type="text" name="nama_absensi" class="form-control" required placeholder="Contoh: Absensi Upacara 10 Mei">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-success">Simpan Rekap</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
 @endsection
 
 @push('scripts')
@@ -119,7 +160,8 @@
 
 <script>
     $(document).ready(function() {
-        $('.table').DataTable();
+        // Inisialisasi DataTable dengan ID tabel
+        $('#scanTable').DataTable();
 
         // Modal Hapus Scan
         $('#checkSetujuHapusScan').on('change', function() {

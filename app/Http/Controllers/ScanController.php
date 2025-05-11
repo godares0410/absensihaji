@@ -10,56 +10,61 @@ use Illuminate\Support\Facades\Log;
 
 class ScanController extends Controller
 {
-    public function index()
-    {
-        // Ambil semua peserta
-        $totalPeserta = DB::table('peserta')->count();
+public function index()
+{
+    // Total peserta
+    $totalPeserta = DB::table('peserta')->count();
 
-        // Ambil peserta yang sudah scan
-        $sudahScan = DB::table('scan')
-            ->join('peserta', 'scan.id_peserta', '=', 'peserta.id_peserta')
-            ->select('peserta.nama_peserta', 'scan.created_at', 'peserta.foto', 'peserta.nomor_peserta', 'peserta.rombongan', 'peserta.regu')
-            ->orderBy('scan.updated_at', 'desc')
-            ->get()
-            ->map(function ($scan) {
-                $scan->waktu_scan = date('H:i:s', strtotime($scan->created_at));
-                return $scan;
-            });
+    // Peserta yang sudah scan (status = 0)
+    $sudahScan = DB::table('scan')
+        ->join('peserta', 'scan.id_peserta', '=', 'peserta.id_peserta')
+        ->where('scan.status', 0)
+        ->select('peserta.id_peserta', 'peserta.nama_peserta', 'scan.created_at', 'peserta.foto', 'peserta.nomor_peserta', 'peserta.rombongan', 'peserta.regu')
+        ->orderBy('scan.updated_at', 'desc')
+        ->get()
+        ->map(function ($scan) {
+            $scan->waktu_scan = date('H:i:s', strtotime($scan->created_at));
+            return $scan;
+        });
 
-        // Ambil daftar ID peserta yang sudah scan
-        $idSudahScan = $sudahScan->pluck('id_peserta')->toArray();
+    // Ambil ID peserta yang sudah scan
+    $idSudahScan = $sudahScan->pluck('id_peserta')->toArray();
 
-        // Ambil peserta yang belum scan
-        $belumScan = DB::table('peserta')
-            ->whereNotIn('id_peserta', function ($query) {
-                $query->select('id_peserta')->from('scan');
-            })
-            ->select('nama_peserta', 'foto', 'nomor_peserta', 'rombongan', 'regu')
-            ->get();
+    // Peserta yang belum scan
+    $belumScan = DB::table('peserta')
+        ->whereNotIn('id_peserta', $idSudahScan)
+        ->select('nama_peserta', 'foto', 'nomor_peserta', 'rombongan', 'regu')
+        ->get();
 
-        // Hitung per rombongan dan regu
-        $rombonganStats = DB::table('peserta')
-            ->whereNotIn('id_peserta', function ($query) {
-                $query->select('id_peserta')->from('scan');
-            })
-            ->select('rombongan', DB::raw('count(*) as total'))
-            ->groupBy('rombongan')
-            ->get();
+    // Statistik berdasarkan rombongan
+    $rombonganStats = DB::table('peserta')
+        ->whereNotIn('id_peserta', $idSudahScan)
+        ->select('rombongan', DB::raw('count(*) as total'))
+        ->groupBy('rombongan')
+        ->get();
 
-        $reguStats = DB::table('peserta')
-            ->whereNotIn('id_peserta', function ($query) {
-                $query->select('id_peserta')->from('scan');
-            })
-            ->select('regu', DB::raw('count(*) as total'))
-            ->groupBy('regu')
-            ->get();
+    // Statistik berdasarkan regu
+    $reguStats = DB::table('peserta')
+        ->whereNotIn('id_peserta', $idSudahScan)
+        ->select('regu', DB::raw('count(*) as total'))
+        ->groupBy('regu')
+        ->get();
 
-        // Hitung jumlah
-        $totalSudahScan = $sudahScan->count();
-        $totalBelumScan = $totalPeserta - $totalSudahScan;
+    // Hitung jumlah scan
+    $totalSudahScan = count($idSudahScan);
+    $totalBelumScan = $totalPeserta - $totalSudahScan;
 
-        return view('scan.index', compact('totalPeserta', 'sudahScan', 'belumScan', 'totalSudahScan', 'totalBelumScan', 'rombonganStats', 'reguStats'));
-    }
+    return view('scan.index', compact(
+        'totalPeserta',
+        'sudahScan',
+        'belumScan',
+        'totalSudahScan',
+        'totalBelumScan',
+        'rombonganStats',
+        'reguStats'
+    ));
+}
+
 
     public function store(Request $request)
     {
@@ -78,7 +83,7 @@ class ScanController extends Controller
         }
 
         // Check if already scanned
-        $alreadyScanned = Scan::where('id_peserta', $id)->exists();
+        $alreadyScanned = Scan::where('id_peserta', $id)->where('status', 0)->exists();
         if ($alreadyScanned) {
             return response()->json([
                 'success' => false,
