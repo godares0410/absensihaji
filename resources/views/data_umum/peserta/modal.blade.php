@@ -66,6 +66,13 @@
                 <div class="modal-body">
                     <label for="file">Pilih File Excel:</label>
                     <input type="file" name="file" id="file" class="form-control" required>
+                    </br>
+                    <p class="mt-2">
+                        <strong>Gunakan Format Yang Sudah Disediakan.</strong>
+                    </p>
+                    <a href="{{ asset('import/Format Import Peserta.xlsx') }}" class="btn btn-sm btn-success" download>
+                        Download Format Import
+                    </a>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>

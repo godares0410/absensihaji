@@ -12,7 +12,7 @@
 <body class="hold-transition login-page">
 <div class="login-box">
   <div class="login-logo">
-    <a href="#"><b>SMK</b>App</a>
+    <a href="#"><b>KBIHU</b>App</a>
   </div>
   <div class="login-box-body">
     <p class="login-box-msg">Login untuk memulai sesi</p>

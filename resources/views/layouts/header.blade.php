@@ -1,8 +1,8 @@
 <header class="main-header">
     <!-- Logo -->
     <a href="{{ url('/home') }}" class="logo">
-        <span class="logo-mini"><b>A</b>LT</span>
-        <span class="logo-lg"><b>Admin</b>LTE</span>
+        <span class="logo-mini"><b>K</b>App</span>
+        <span class="logo-lg"><b>Admin</b>KBIHU</span>
     </a>
 
     <!-- Header Navbar -->
