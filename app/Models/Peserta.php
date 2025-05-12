@@ -18,6 +18,7 @@ class Peserta extends Model
         'rombongan',
         'regu',
         'keterangan',
+        'embarkasi',
         'kloter',
         'foto'
     ];

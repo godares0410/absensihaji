@@ -2,7 +2,7 @@
 <html lang="en">
 @include('layouts.head')
 
-<body class="hold-transition skin-blue sidebar-mini">
+<body class="hold-transition skin-red sidebar-mini">
     <div class="wrapper">
         @include('layouts.header')
         @include('layouts.sidebar')

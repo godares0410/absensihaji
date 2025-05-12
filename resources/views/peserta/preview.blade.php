@@ -31,6 +31,7 @@
                             <th>Rombongan</th>
                             <th>Regu</th>
                             <th>Keterangan</th>
+                            <th>Embarkasi</th>
                             <th>Kloter</th>
                             <th>Error</th>
                         </tr>
@@ -45,6 +46,7 @@
                             <td>{{ $item['rombongan'] }}</td>
                             <td>{{ $item['regu'] }}</td>
                             <td>{{ $item['keterangan'] }}</td>
+                            <td>{{ $item['embarkasi'] }}</td>
                             <td>{{ $item['kloter'] }}</td>
                             <td class="text-danger">{{ $item['error'] }}</td>
                         </tr>
@@ -75,6 +77,7 @@
                                 <th>Rombongan</th>
                                 <th>Regu</th>
                                 <th>Keterangan</th>
+                                <th>Embarkasi</th>
                                 <th>Kloter</th>
                             </tr>
                         </thead>
@@ -88,6 +91,7 @@
                                 <td>{{ $item['rombongan'] }}</td>
                                 <td>{{ $item['regu'] }}</td>
                                 <td>{{ $item['keterangan'] }}</td>
+                                <td>{{ $item['embarkasi'] }}</td>
                                 <td>{{ $item['kloter'] }}</td>
                             </tr>
                             @endforeach

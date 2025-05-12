@@ -51,7 +51,8 @@ class PesertaImportController extends Controller
                 'rombongan'     => $rowData[5] ?? null,
                 'regu'          => $rowData[6] ?? null,
                 'keterangan'    => $rowData[7] ?? null,
-                'kloter'        => $rowData[8] ?? null,
+                'embarkasi'     => $rowData[8] ?? null,
+                'kloter'        => $rowData[9] ?? null,
             ];
 
             // Validasi sederhana
@@ -75,10 +76,10 @@ class PesertaImportController extends Controller
     public function processImport()
     {
         $data = session('valid_import_data', []);
-    
+
         $inserted = [];
         $duplicateData = [];
-    
+
         foreach ($data as $row) {
             // Cek apakah nomor_peserta sudah ada di database
             if (Peserta::where('nomor_peserta', $row['nomor_peserta'])->exists()) {
@@ -88,17 +89,17 @@ class PesertaImportController extends Controller
                 $inserted[] = $row;
             }
         }
-    
+
         // Bersihkan session
         session()->forget('valid_import_data');
-    
+
         // Tampilkan halaman hasil import (baik berhasil maupun duplikat)
         return view('peserta.duplicate', [
             'insertedData'   => $inserted,
             'duplicateData'  => $duplicateData,
         ]);
     }
-    
+
 
     public function cancelImport()
     {

@@ -3,6 +3,32 @@
 @push('styles')
 <!-- DataTables -->
 <link rel="stylesheet" href="{{ asset('AdminLTE-2/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css') }}">
+<style>
+    .detail-label {
+        font-size: 0.85rem;
+        font-weight: 600;
+        margin-bottom: 0.2rem;
+        text-transform: uppercase;
+    }
+
+    .detail-value {
+        font-size: 1rem;
+        font-weight: 500;
+        color: #333;
+        margin-bottom: 0;
+    }
+
+    .modal-content {
+        border: none;
+        border-radius: 0.5rem;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .modal-header {
+        border-bottom: none;
+        border-radius: 0.5rem 0.5rem 0 0 !important;
+    }
+</style>
 @endpush
 @section('title', 'Dashboard')
 
@@ -47,6 +73,8 @@
                         <th>Kecamatan</th>
                         <th>Rombongan</th>
                         <th>Regu</th>
+                        <th>Keterangagn</th>
+                        <th>Embarkasi</th>
                         <th>Kloter</th>
                         <th class="text-center">Aksi</th>
                     </tr>
@@ -61,6 +89,8 @@
                         <td>{{ $data->kecamatan ?? '-' }}</td>
                         <td>{{ $data->rombongan ?? '-' }}</td>
                         <td>{{ $data->regu ?? '-' }}</td>
+                        <td>{{ $data->keterangan ?? '-' }}</td>
+                        <td>{{ $data->embarkasi ?? '-' }}</td>
                         <td>{{ $data->kloter ?? '-' }}</td>
                         <td class="text-center">
                             <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#modalEditPeserta{{ $data->id_peserta }}">Edit</button>

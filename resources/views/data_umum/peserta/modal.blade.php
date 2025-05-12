@@ -30,6 +30,14 @@
                         <input type="number" name="regu" class="form-control">
                     </div>
                     <div class="form-group">
+                        <label>Keterangan</label>
+                        <input type="text" name="keterangan" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>Embarkasi</label>
+                        <input type="text" name="embarkasi" class="form-control">
+                    </div>
+                    <div class="form-group">
                         <label>Kloter</label>
                         <input type="text" name="kloter" class="form-control">
                     </div>
@@ -86,25 +94,67 @@
 
 @foreach ($peserta as $data)
 <!-- Modal Detail -->
-<div class="modal fade" id="modalDetailPeserta{{ $data->id_peserta }}" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
+<div class="modal fade" id="modalDetailPeserta{{ $data->id_peserta }}" tabindex="-1" role="dialog" aria-labelledby="modalDetailLabel">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Detail Peserta</h4>
+            <div class="modal-header bg-primary text-white">
+                <h4 class="modal-title font-weight-bold" id="modalDetailLabel">Detail Peserta</h4>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
-            <div class="modal-body text-center">
-                <img src="{{ $data->foto ? asset('image/'.$data->foto) : asset('image/icon.png') }}"
-                    alt="Foto Peserta" class="img-thumbnail mb-3" width="150">
-                <p><strong>Nomor Peserta:</strong> {{ $data->nomor_peserta }}</p>
-                <p><strong>Nama Peserta:</strong> {{ $data->nama_peserta }}</p>
-                <p><strong>Kecamatan:</strong> {{ $data->kecamatan ?? '-' }}</p>
-                <p><strong>Rombongan:</strong> {{ $data->rombongan ?? '-' }}</p>
-                <p><strong>Regu:</strong> {{ $data->regu ?? '-' }}</p>
-                <p><strong>Kloter:</strong> {{ $data->kloter ?? '-' }}</p>
-                <p><strong>Alamat:</strong> {{ $data->alamat ?? '-' }}</p>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-4 text-center">
+                        <div class="mb-4">
+                            <img src="{{ $data->foto ? asset('image/'.$data->foto) : asset('image/icon.png') }}"
+                                alt="Foto Peserta" class="img-thumbnail rounded-circle shadow" width="180">
+                        </div>
+                        <h3 class="h5 font-weight-bold text-primary">{{ $data->nama_peserta }}</h3>
+                        <h4 class="h6 text-muted">{{ $data->nomor_peserta }}</h4>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="detail-item mb-3">
+                                    <h5 class="detail-label text-secondary">Kecamatan</h5>
+                                    <p class="detail-value">{{ $data->kecamatan ?? '-' }}</p>
+                                </div>
+                                <div class="detail-item mb-3">
+                                    <h5 class="detail-label text-secondary">Rombongan</h5>
+                                    <p class="detail-value">{{ $data->rombongan ?? '-' }}</p>
+                                </div>
+                                <div class="detail-item mb-3">
+                                    <h5 class="detail-label text-secondary">Regu</h5>
+                                    <p class="detail-value">{{ $data->regu ?? '-' }}</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="detail-item mb-3">
+                                    <h5 class="detail-label text-secondary">Kloter</h5>
+                                    <p class="detail-value">{{ $data->kloter ?? '-' }}</p>
+                                </div>
+                                <div class="detail-item mb-3">
+                                    <h5 class="detail-label text-secondary">Embarkasi</h5>
+                                    <p class="detail-value">{{ $data->embarkasi ?? '-' }}</p>
+                                </div>
+                                <div class="detail-item mb-3">
+                                    <h5 class="detail-label text-secondary">Keterangan</h5>
+                                    <p class="detail-value">{{ $data->keterangan ?? '-' }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="detail-item">
+                            <h5 class="detail-label text-secondary">Alamat</h5>
+                            <p class="detail-value">{{ $data->alamat ?? '-' }}</p>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
+            <div class="modal-footer border-top-0">
+                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">
+                    <i class="fas fa-times mr-2"></i>Tutup
+                </button>
             </div>
         </div>
     </div>
@@ -140,6 +190,14 @@
                     <div class="form-group">
                         <label>Regu</label>
                         <input type="number" name="regu" class="form-control" value="{{ $data->regu }}">
+                    </div>
+                    <div class="form-group">
+                        <label>Keterangan</label>
+                        <input type="text" name="keterangan" class="form-control" value="{{ $data->keterangan }}">
+                    </div>
+                    <div class="form-group">
+                        <label>Embarkasi</label>
+                        <input type="text" name="embarkasi" class="form-control" value="{{ $data->embarkasi }}">
                     </div>
                     <div class="form-group">
                         <label>Kloter</label>

@@ -35,7 +35,7 @@
                             @endif
                             <p>
                                 {{ auth()->user()->name ?? 'Admin' }} - Administrator
-                                <small>Member since {{ optional(auth()->user())->created_at->format('M. Y') ?? 'Nov. 2023' }}</small>
+                                <small>Member Mulai {{ optional(auth()->user())->created_at->format('M. Y') ?? 'Nov. 2023' }}</small>
                             </p>
                         </li>
                         <!-- Menu Footer-->
