@@ -73,24 +73,6 @@
 <!-- DataTables -->
 <script src="{{ asset('AdminLTE-2/bower_components/datatables.net/js/jquery.dataTables.min.js') }}"></script>
 <script src="{{ asset('AdminLTE-2/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js') }}"></script>
-
-<!-- <script>
-    $(document).ready(function() {
-        $('.table').DataTable();
-
-        function openModal(title) {
-            $('.modal-title').text(title);
-        }
-
-        $('button[data-target="#modalTambahSiswa"]').on('click', function() {
-            openModal("Tambah Peserta");
-        });
-
-        $('button[data-target="#importModal"]').on('click', function() {
-            openModal("Import Data Peserta");
-        });
-    });
-</script> -->
 <script>
     $(document).ready(function() {
         var table = $('.table').DataTable();
