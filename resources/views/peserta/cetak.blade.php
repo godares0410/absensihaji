@@ -168,10 +168,10 @@
                     <div class="info">NO. PORSI {{ $peserta->nomor_peserta }}</div>
 
                     <div class="box-group">
-                        <!-- <div class="box">
-                        <div class="box-title">EMBARKASI</div>
-                        <div class="box-value">{{ strtoupper($peserta->embarkasi) }}</div>
-                    </div> -->
+                        <div class="box">
+                            <div class="box-title">EMBARKASI</div>
+                            <div class="box-value">{{ strtoupper($peserta->embarkasi) }}</div>
+                        </div>
                         <div class="box">
                             <div class="box-title">KLOTER</div>
                             <div class="box-value">{{ $peserta->kloter }}</div>
@@ -180,10 +180,10 @@
                             <div class="box-title">ROMBONGAN</div>
                             <div class="box-value">{{ $peserta->rombongan }}</div>
                         </div>
-                        <div class="box">
+                        <!-- <div class="box">
                             <div class="box-title">REGU</div>
                             <div class="box-value">{{ $peserta->regu }}</div>
-                        </div>
+                        </div> -->
                     </div>
 
                     <div class="qr-code">
