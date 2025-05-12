@@ -181,7 +181,7 @@
         @foreach($pesertas as $peserta)
         <div class="card">
             <div class="card-content">
-                <img class="photo" src="{{ asset('image/' . $peserta->foto) }}" alt="Foto Peserta">
+                <img class="photo" src="{{ $peserta->foto ? asset('image/'.$peserta->foto) : asset('image/icon.png') }}" alt="Foto Peserta">
                 <div class="name">{{ strtoupper($peserta->nama_peserta) }}</div>
                 <div class="info">NO. PORSI {{ $peserta->nomor_peserta }}</div>
 

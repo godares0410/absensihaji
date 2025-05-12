@@ -15,7 +15,7 @@
   <!-- Filter Section -->
   <div class="row">
     <div class="col-lg-6">
-      <form action="{{ route('peserta.cetakKartu') }}" method="GET">
+      <form action="{{ route('peserta.cetakKartu') }}" method="GET" target="_blank">
         <div class="form-group">
           <label for="rombongan">Rombongan</label>
           <select name="rombongan" id="rombongan" class="form-control">
