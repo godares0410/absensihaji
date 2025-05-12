@@ -29,7 +29,11 @@
                     <i class="fa fa-users"></i> <span>Data Peserta</span>
                 </a>
             </li>
-
+            <li class="{{ request()->is('data-cetak') ? 'active' : '' }}">
+                <a href="{{ url('/data-cetak') }}">
+                    <i class="fa fa-print"></i> <span>Cetak Kartu</span>
+                </a>
+            </li>
             <li class="{{ request()->is('data-scan') ? 'active' : '' }}">
                 <a href="{{ url('/data-scan') }}">
                     <i class="fa fa-qrcode"></i> <span>Data Scan</span>

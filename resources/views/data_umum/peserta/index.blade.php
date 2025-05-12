@@ -13,11 +13,21 @@
         <ul>@foreach ($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul>
     </div>
     @endif
+    @if (session('success'))
+    <div class="alert alert-success alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        {{ session('success') }}
+    </div>
+    @endif
+
 
     <div class="box">
         <div class="box-header with-border">
             <h3 class="box-title">Data {{ ucwords($title) }}</h3>
             <div class="pull-right">
+                <button type="button" class="btn btn-danger hidden" id="bulkDeleteBtn" disabled>
+                    Hapus Terpilih <i class="fa fa-trash"></i>
+                </button>
                 <button type="button" class="btn btn-success" data-toggle="modal" data-target="#importModal">
                     Import Data <i class="fa fa-upload"></i>
                 </button>
@@ -30,6 +40,7 @@
             <table class="table table-bordered table-striped">
                 <thead>
                     <tr>
+                        <th><input type="checkbox" id="checkAll"></th>
                         <th style="width: 20px">No</th>
                         <th>Nomor Peserta</th>
                         <th>Nama Peserta</th>
@@ -43,6 +54,7 @@
                 <tbody>
                     @foreach ($peserta as $index => $data)
                     <tr>
+                        <td><input type="checkbox" class="checkbox-item" value="{{ $data->id_peserta }}"></td>
                         <td>{{ $index + 1 }}</td>
                         <td>{{ $data->nomor_peserta }}</td>
                         <td>{{ $data->nama_peserta }}</td>
@@ -73,25 +85,27 @@
 <!-- DataTables -->
 <script src="{{ asset('AdminLTE-2/bower_components/datatables.net/js/jquery.dataTables.min.js') }}"></script>
 <script src="{{ asset('AdminLTE-2/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js') }}"></script>
+<!-- SweetAlert2 CDN -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     $(document).ready(function() {
         var table = $('.table').DataTable();
-        
+
         // Event handler untuk tombol delete yang menggunakan event delegation
         $(document).on('click', '.btn-delete-peserta', function() {
             const id = $(this).data('id');
             const nama = $(this).closest('tr').find('td:eq(2)').text(); // Ambil nama peserta dari kolom ke-3
-            
+
             $('#formHapusPeserta').attr('action', '/peserta/' + id);
             $('#checkSetujuHapus').prop('checked', false);
             $('#btnHapusPeserta').prop('disabled', true);
-            
+
             // Update teks konfirmasi dengan nama peserta
             $('#modalHapusPeserta .modal-body p').html(
                 `Apakah Anda yakin ingin menghapus data peserta <strong>${nama}</strong>?<br>
                 <strong>Seluruh riwayat absensi terkait juga akan dihapus secara permanen.</strong>`
             );
-            
+
             $('#modalHapusPeserta').modal('show');
         });
 
@@ -111,6 +125,87 @@
 
         $('button[data-target="#importModal"]').on('click', function() {
             openModal("Import Data Peserta");
+        });
+    });
+</script>
+<script>
+    $(document).ready(function() {
+        var selectedIds = [];
+
+        $('#checkAll').on('click', function() {
+            $('.checkbox-item').prop('checked', this.checked);
+            toggleBulkDeleteBtn();
+        });
+
+        $(document).on('change', '.checkbox-item', function() {
+            toggleBulkDeleteBtn();
+        });
+
+        function toggleBulkDeleteBtn() {
+            const anyChecked = $('.checkbox-item:checked').length > 0;
+            $('#bulkDeleteBtn').prop('disabled', !anyChecked);
+            // Change button visibility based on selection
+            if (anyChecked) {
+                $('#bulkDeleteBtn').removeClass('hidden');
+            } else {
+                $('#bulkDeleteBtn').addClass('hidden');
+            }
+        }
+
+
+        // Ketika tombol Hapus Terpilih diklik
+        $('#bulkDeleteBtn').on('click', function() {
+            selectedIds = $('.checkbox-item:checked').map(function() {
+                return $(this).val();
+            }).get();
+
+            $('#modalBulkHapusText').text(`Anda akan menghapus ${selectedIds.length} peserta. Tindakan ini tidak dapat dibatalkan.`);
+
+            $('#checkSetujuBulkHapus').prop('checked', false);
+            $('#btnBulkHapusPeserta').prop('disabled', true);
+
+            $('#modalBulkHapusPeserta').modal('show');
+        });
+
+        $('#checkSetujuBulkHapus').on('change', function() {
+            $('#btnBulkHapusPeserta').prop('disabled', !this.checked);
+        });
+
+        $('#formBulkHapusPeserta').on('submit', function(e) {
+            e.preventDefault();
+
+            $.ajax({
+                url: "{{ route('peserta.bulkDelete') }}",
+                type: "POST",
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    ids: selectedIds
+                },
+                success: function(res) {
+                    if (res.success) {
+                        Swal.fire(
+                            'Dihapus!',
+                            res.message,
+                            'success'
+                        ).then(() => {
+                            location.reload();
+                        });
+                    } else {
+                        Swal.fire(
+                            'Gagal!',
+                            'Terjadi kesalahan saat menghapus data.',
+                            'error'
+                        );
+                    }
+                },
+                error: function() {
+                    Swal.fire(
+                        'Gagal!',
+                        'Terjadi kesalahan pada server.',
+                        'error'
+                    );
+                }
+            });
         });
     });
 </script>

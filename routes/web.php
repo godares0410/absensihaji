@@ -11,6 +11,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\DatascanController;
 use App\Http\Controllers\DataexportController;
+use App\Http\Controllers\CetakkartuController;
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/home', [DashboardController::class, 'index'])->name('home');
@@ -26,6 +27,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/data-export', [DataexportController::class, 'index'])->name('dataexport.index');
     Route::delete('/data-export/{nama}', [DataexportController::class, 'destroy'])->name('dataexport.destroy');
     Route::get('/data-export/export/{nama}/{format}', [DataexportController::class, 'export'])->name('dataexport.export');
+    Route::post('/peserta/bulk-delete', [PesertaController::class, 'bulkDelete'])->name('peserta.bulkDelete');
+    Route::resource('data-cetak', CetakkartuController::class);
+    Route::get('/data-cetak/cetak', [CetakkartuController::class, 'cetakKartu'])->name('peserta.cetakKartu');
+    Route::get('/get-regu/{rombongan}', [CetakkartuController::class, 'getRegu']);
+
 });
 Route::get('/admin-users', [AdminUserController::class, 'index'])->name('admin-users.index');
 Route::post('/admin-users', [AdminUserController::class, 'store'])->name('admin-users.store');

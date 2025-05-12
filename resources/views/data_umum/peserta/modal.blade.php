@@ -194,3 +194,30 @@
         </form>
     </div>
 </div>
+
+<!-- Modal Hapus Terpilih -->
+<div class="modal fade" id="modalBulkHapusPeserta" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <form id="formBulkHapusPeserta">
+            @csrf
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Konfirmasi Hapus Terpilih</h4>
+                </div>
+                <div class="modal-body">
+                    <p id="modalBulkHapusText">Anda akan menghapus beberapa peserta.</p>
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" id="checkSetujuBulkHapus">
+                            Saya mengerti dan ingin melanjutkan
+                        </label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Batal</button>
+                    <button type="submit" id="btnBulkHapusPeserta" class="btn btn-danger" disabled>Hapus</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
