@@ -94,26 +94,27 @@
             font-weight: bold;
         }
 
-        .qr-code {
-            width: 60px;
-            height: 60px;
-            margin: 5px auto;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
+.qr-code {
+    width: 30mm;
+    height: 30mm;
+    margin: 5px auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
 
-        .qr-code svg {
-            width: 100%;
-            height: 100%;
-        }
+.qr-code svg {
+    width: 100%;
+    height: 100%;
+}
 
-        .qr-code .small-text {
-            font-size: 6px;
-            margin-top: 2px;
-            text-align: center;
-        }
+.qr-code .small-text {
+    font-size: 7px;
+    margin-top: 1mm;
+    text-align: center;
+}
+
 
         .small-text {
             font-size: 6px;
