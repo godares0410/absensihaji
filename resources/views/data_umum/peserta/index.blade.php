@@ -93,8 +93,32 @@
 </script> -->
 <script>
     $(document).ready(function() {
-        $('.table').DataTable();
+        var table = $('.table').DataTable();
 
+        // Event handler untuk tombol delete yang menggunakan event delegation
+        $(document).on('click', '.btn-delete-peserta', function() {
+            const id = $(this).data('id');
+            const nama = $(this).closest('tr').find('td:eq(2)').text(); // Ambil nama peserta dari kolom ke-3
+
+            $('#formHapusPeserta').attr('action', '/peserta/' + id);
+            $('#checkSetujuHapus').prop('checked', false);
+            $('#btnHapusPeserta').prop('disabled', true);
+
+            // Update teks konfirmasi dengan nama peserta
+            $('#modalHapusPeserta .modal-body p').html(
+                `Apakah Anda yakin ingin menghapus data peserta <strong>${nama}</strong>?<br>
+                <strong>Seluruh riwayat absensi terkait juga akan dihapus secara permanen.</strong>`
+            );
+
+            $('#modalHapusPeserta').modal('show');
+        });
+
+        // Handler untuk checkbox konfirmasi
+        $('#checkSetujuHapus').on('change', function() {
+            $('#btnHapusPeserta').prop('disabled', !this.checked);
+        });
+
+        // Fungsi untuk modal tambah/edit (jika diperlukan)
         function openModal(title) {
             $('.modal-title').text(title);
         }
@@ -105,19 +129,6 @@
 
         $('button[data-target="#importModal"]').on('click', function() {
             openModal("Import Data Peserta");
-        });
-
-        // Modal Hapus Peserta
-        $('#checkSetujuHapus').on('change', function() {
-            $('#btnHapusPeserta').prop('disabled', !this.checked);
-        });
-
-        $('button.btn-delete-peserta').on('click', function() {
-            const id = $(this).data('id');
-            $('#formHapusPeserta').attr('action', '/peserta/' + id);
-            $('#checkSetujuHapus').prop('checked', false);
-            $('#btnHapusPeserta').prop('disabled', true);
-            $('#modalHapusPeserta').modal('show');
         });
     });
 </script>

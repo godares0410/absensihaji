@@ -18,13 +18,21 @@
                 <!-- User Account Menu -->
                 <li class="dropdown user user-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        <img src="{{ asset('AdminLTE-2/dist/img/user2-160x160.jpg') }}" class="user-image" alt="User Image">
+                        @if(auth()->user()->foto)
+                        <img src="{{ asset('image/' . auth()->user()->foto) }}" class="user-image" alt="User Image">
+                        @else
+                        <img src="{{ asset('image/icon.png') }}" class="user-image" alt="User Image">
+                        @endif
                         <span class="hidden-xs">{{ auth()->user()->name ?? 'Admin' }}</span>
                     </a>
                     <ul class="dropdown-menu">
                         <!-- User image -->
                         <li class="user-header">
-                            <img src="{{ asset('AdminLTE-2/dist/img/user2-160x160.jpg') }}" class="img-circle" alt="User Image">
+                            @if(auth()->user()->foto)
+                            <img src="{{ asset('image/' . auth()->user()->foto) }}" class="img-circle" alt="User Image">
+                            @else
+                            <img src="{{ asset('image/icon.png') }}" class="img-circle" alt="User Image">
+                            @endif
                             <p>
                                 {{ auth()->user()->name ?? 'Admin' }} - Administrator
                                 <small>Member since {{ optional(auth()->user())->created_at->format('M. Y') ?? 'Nov. 2023' }}</small>

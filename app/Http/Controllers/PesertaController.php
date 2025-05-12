@@ -15,24 +15,59 @@ class PesertaController extends Controller
             'title' => 'Data Peserta'
         ]);
     }
+    public function store(Request $request)
+    {
+        $request->validate([
+            'nomor_peserta' => 'required|unique:peserta',
+            'nama_peserta' => 'required',
+            'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            // Add other validation rules
+        ]);
+
+        $data = $request->except('foto');
+
+        if ($request->hasFile('foto')) {
+            $file = $request->file('foto');
+            $fileName = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('image'), $fileName);
+            $data['foto'] = $fileName;
+        }
+
+        Peserta::create($data);
+
+        return redirect()->route('peserta.index')->with('success', 'Data peserta berhasil ditambahkan.');
+    }
+
     public function update(Request $request, $id)
     {
         $peserta = Peserta::findOrFail($id);
 
-        $peserta->nomor_peserta = $request->nomor_peserta;
-        $peserta->nama_peserta = $request->nama_peserta;
-        $peserta->kecamatan = $request->kecamatan;
-        $peserta->rombongan = $request->rombongan;
-        $peserta->regu = $request->regu;
-        $peserta->kloter = $request->kloter;
-        $peserta->alamat = $request->alamat;
+        $request->validate([
+            'nomor_peserta' => 'required|unique:peserta,nomor_peserta,' . $id . ',id_peserta',
+            'nama_peserta' => 'required',
+            'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            // Add other validation rules
+        ]);
+
+        $data = $request->except('foto');
 
         if ($request->hasFile('foto')) {
-            $path = $request->file('foto')->store('peserta', 'public');
-            $peserta->foto = $path;
+            // Delete old photo if exists
+            if ($peserta->foto) {
+                $oldFilePath = public_path('image/' . $peserta->foto);
+                if (file_exists($oldFilePath)) {
+                    unlink($oldFilePath); // atau File::delete($oldFilePath)
+                }
+            }
+
+            // Upload new photo
+            $file = $request->file('foto');
+            $fileName = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('image'), $fileName);
+            $data['foto'] = $fileName;
         }
 
-        $peserta->save();
+        $peserta->update($data);
 
         return redirect()->route('peserta.index')->with('success', 'Data berhasil diperbarui.');
     }
@@ -40,7 +75,17 @@ class PesertaController extends Controller
     public function destroy($id)
     {
         $peserta = Peserta::findOrFail($id);
+
+        // Delete photo if exists
+        if ($peserta->foto) {
+            $filePath = public_path('image/' . $peserta->foto); // Tambahkan 'image/' di sini
+            if (file_exists($filePath)) {
+                unlink($filePath); // atau File::delete($filePath)
+            }
+        }
+
         $peserta->delete();
+
         return redirect()->route('peserta.index')->with('success', 'Data berhasil dihapus.');
     }
 

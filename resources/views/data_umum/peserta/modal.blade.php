@@ -1,14 +1,47 @@
 <!-- /Users/admin/Documents/absensinew/resources/views/data_umum/peserta/modal.blade.php -->
+<!-- Modal Tambah Peserta -->
 <div class="modal fade" id="modalTambahSiswa" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
-        <form>
+        <form action="{{ route('peserta.store') }}" method="POST" enctype="multipart/form-data">
+            @csrf
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title">Tambah Peserta</h4>
                 </div>
                 <div class="modal-body">
-                    <!-- Tambahkan input form peserta di sini -->
-                    <p>Form tambah peserta (belum diimplementasikan)</p>
+                    <div class="form-group">
+                        <label>Nomor Peserta</label>
+                        <input type="text" name="nomor_peserta" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Nama Peserta</label>
+                        <input type="text" name="nama_peserta" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Kecamatan</label>
+                        <input type="text" name="kecamatan" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>Rombongan</label>
+                        <input type="number" name="rombongan" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>Regu</label>
+                        <input type="number" name="regu" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>Kloter</label>
+                        <input type="text" name="kloter" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>Alamat</label>
+                        <textarea name="alamat" class="form-control"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Foto Peserta</label>
+                        <input type="file" name="foto" class="form-control">
+                        <small class="text-muted">Format: JPEG, PNG, JPG, GIF (Max 2MB)</small>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
@@ -53,7 +86,8 @@
                 <h4 class="modal-title">Detail Peserta</h4>
             </div>
             <div class="modal-body text-center">
-                <img src="{{ $data->foto ? asset('storage/' . $data->foto) : asset('image/icon.png') }}" alt="Foto Peserta" class="img-thumbnail mb-3" width="150">
+                <img src="{{ $data->foto ? asset('image/'.$data->foto) : asset('image/icon.png') }}"
+                    alt="Foto Peserta" class="img-thumbnail mb-3" width="150">
                 <p><strong>Nomor Peserta:</strong> {{ $data->nomor_peserta }}</p>
                 <p><strong>Nama Peserta:</strong> {{ $data->nama_peserta }}</p>
                 <p><strong>Kecamatan:</strong> {{ $data->kecamatan ?? '-' }}</p>
@@ -110,6 +144,11 @@
                     </div>
                     <div class="form-group">
                         <label>Foto (optional)</label>
+                        @if($data->foto)
+                        <div class="mb-2">
+                            <img src="{{ asset('image/' . $data->foto) }}" width="100" class="img-thumbnail">
+                        </div>
+                        @endif
                         <input type="file" name="foto" class="form-control">
                     </div>
                 </div>
@@ -130,22 +169,25 @@
             @csrf
             @method('DELETE')
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header bg-danger text-white">
                     <h4 class="modal-title">Konfirmasi Hapus Peserta</h4>
+                    <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
                 <div class="modal-body">
                     <p>
-                        Apakah Anda yakin ingin menghapus data peserta ini? <br>
-                        <strong>Seluruh riwayat absensi terkait juga akan dihapus secara permanen.</strong>
+                        <!-- Teks akan diupdate via JavaScript -->
                     </p>
-                    <div class="checkbox">
-                        <label>
-                            <input type="checkbox" id="checkSetujuHapus"> Saya menyetujui penghapusan data ini.
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="checkSetujuHapus">
+                        <label class="form-check-label" for="checkSetujuHapus">
+                            Saya menyetujui penghapusan data ini.
                         </label>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
                     <button type="submit" class="btn btn-danger" id="btnHapusPeserta" disabled>Hapus</button>
                 </div>
             </div>

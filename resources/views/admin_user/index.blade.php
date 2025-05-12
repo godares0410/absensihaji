@@ -55,7 +55,7 @@
                     <!-- Modal Edit -->
                     <div class="modal fade" id="modalEditUser{{ $user->id }}" tabindex="-1">
                         <div class="modal-dialog">
-                            <form method="POST" action="{{ route('admin-users.update', $user->id) }}">
+                            <form method="POST" action="{{ route('admin-users.update', $user->id) }}" enctype="multipart/form-data">
                                 @csrf
                                 @method('PUT')
                                 <div class="modal-content">
@@ -66,6 +66,16 @@
                                         <input type="text" name="name" class="form-control mb-2" value="{{ $user->name }}" required placeholder="Nama">
                                         <input type="email" name="email" class="form-control mb-2" value="{{ $user->email }}" required placeholder="Email">
                                         <input type="password" name="password" class="form-control" placeholder="Ganti Password (opsional)">
+                                        <div class="form-group">
+                                            <label>Foto Profil</label>
+                                            @if($user->foto)
+                                            <div class="mb-2">
+                                                <img src="{{ asset('image/' . $user->foto) }}" width="100" class="img-thumbnail">
+                                            </div>
+                                            @endif
+                                            <input type="file" name="foto" class="form-control">
+                                            <small class="text-muted">Biarkan kosong jika tidak ingin mengubah foto</small>
+                                        </div>
                                     </div>
                                     <div class="modal-footer">
                                         <button type="submit" class="btn btn-primary">Simpan</button>
@@ -86,7 +96,7 @@
 <!-- Modal Tambah -->
 <div class="modal fade" id="modalTambahUser" tabindex="-1" role="dialog" aria-labelledby="modalTambahUserLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
-        <form method="POST" action="{{ route('admin-users.store') }}" class="w-100">
+        <form method="POST" action="{{ route('admin-users.store') }}" class="w-100" enctype="multipart/form-data">
             @csrf
             <div class="modal-content shadow-lg rounded-3">
                 <div class="modal-header bg-primary text-white">
@@ -107,6 +117,11 @@
                     <div class="form-group">
                         <label for="password">Password</label>
                         <input type="password" name="password" class="form-control" id="password" placeholder="Minimal 6 karakter" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="foto">Foto Profil</label>
+                        <input type="file" name="foto" class="form-control" id="foto">
+                        <small class="text-muted">Format: JPEG, PNG, JPG, GIF (Max 2MB)</small>
                     </div>
                 </div>
                 <div class="modal-footer bg-light">

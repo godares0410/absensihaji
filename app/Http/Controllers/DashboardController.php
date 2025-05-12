@@ -12,7 +12,7 @@ class DashboardController extends Controller
         $user = Auth::user();
 
         $totalPeserta = DB::table('peserta')->count();
-        $totalScan = DB::table('scan')->count();
+        $totalScan = DB::table('scan')->where('status', 0)->count();
         $totalRombongan = DB::table('peserta')->distinct('rombongan')->count('rombongan');
         $totalRegu = DB::table('peserta')->distinct('regu')->count('regu');
 
