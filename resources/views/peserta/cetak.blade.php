@@ -51,8 +51,8 @@
         }
 
         .card-content img.photo {
-            width: 60px;
-            height: 70px;
+            width: 80px;
+            height: 90px;
             object-fit: cover;
             border-radius: 4px;
             margin-bottom: 5px;
@@ -60,7 +60,7 @@
         }
 
         .name {
-            font-size: 10px;
+            font-size: 14px;
             font-weight: bold;
         }
 
@@ -94,26 +94,27 @@
             font-weight: bold;
         }
 
-.qr-code {
-    width: 30mm;
-    height: 30mm;
-    margin: 5px auto;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
+        .qr-code {
+            width: 25mm;
+            height: 25mm;
+            margin: 2px auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            /* border: 1px solid #000; */
+        }
 
-.qr-code svg {
-    width: 100%;
-    height: 100%;
-}
+        .qr-code svg {
+            width: 100%;
+            height: 100%;
+        }
 
-.qr-code .small-text {
-    font-size: 7px;
-    margin-top: 1mm;
-    text-align: center;
-}
+        .qr-code .small-text {
+            font-size: 7px;
+            margin-top: 1mm;
+            text-align: center;
+        }
 
 
         .small-text {
@@ -125,7 +126,7 @@
             border-radius: 3px;
             padding: 2px;
             background-color: #fff;
-            margin-top: 4px;
+            margin-top: 1px;
             width: 100%;
             box-sizing: border-box;
         }
