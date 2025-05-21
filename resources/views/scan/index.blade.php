@@ -192,11 +192,20 @@ use Illuminate\Support\Facades\DB;
             <div class="col-md-6 mb-4">
                 <div class="form-container">
                     <h2 class="mb-4" style="color: #343a40; font-weight: 600;">Masukkan Kode</h2>
+                    <!-- Saudi Arabia Time Display -->
+                    <div class="form-group mb-3">
+                        <label>Waktu Sekarang (Arab Saudi):</label>
+                        <div class="alert alert-info py-2" id="saudiTime" style="font-weight: bold; font-size: 1.1rem;">
+                            Loading...
+                        </div>
+                    </div>
                     <form action="{{ route('scan.store') }}" method="POST">
                         @csrf
                         <div class="form-group">
                             <label for="kode">Kode Peserta</label>
                             <input type="text" class="form-control" id="kode" name="kode" placeholder="Masukkan kode peserta" required>
+                            <!-- Hidden input for local time -->
+                            <input type="hidden" name="local_time" id="localTime">
                         </div>
                         <div class="d-flex justify-content-between">
                             <button type="submit" class="btn btn-primary">
@@ -239,7 +248,6 @@ use Illuminate\Support\Facades\DB;
                             </div>
                         </div>
                     </div>
-
 
                     <ul class="nav nav-tabs" id="myTab" role="tablist" style="overflow-x: auto; white-space: nowrap; flex-wrap: nowrap;">
                         <li class="nav-item">
@@ -408,9 +416,14 @@ use Illuminate\Support\Facades\DB;
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
     <script>
-        // Form submission
+        // Form submission with local time
         $('form').on('submit', function(e) {
             e.preventDefault();
+
+            // Set current local time
+            const now = new Date();
+            $('#localTime').val(now.toISOString());
+
             const form = $(this);
             const submitBtn = form.find('button[type="submit"]');
             const originalBtnText = submitBtn.html();
@@ -454,7 +467,7 @@ use Illuminate\Support\Facades\DB;
             });
         });
 
-        // QR Scanner
+        // QR Scanner with local time
         document.getElementById("openCamera").addEventListener("click", function() {
             const qrReader = document.getElementById("qr-reader");
             qrReader.style.display = "block";
@@ -468,6 +481,9 @@ use Illuminate\Support\Facades\DB;
                 },
                 qrCodeMessage => {
                     document.getElementById("kode").value = qrCodeMessage;
+                    // Set current local time before submit
+                    const now = new Date();
+                    $('#localTime').val(now.toISOString());
                     html5QrCode.stop();
                     qrReader.style.display = "none";
                     $('form').submit();
@@ -491,7 +507,7 @@ use Illuminate\Support\Facades\DB;
             });
         });
 
-        // Scan participant
+        // Scan participant with local time
         function scanPeserta(nomorPeserta) {
             Swal.fire({
                 title: 'Konfirmasi Scan',
@@ -503,11 +519,16 @@ use Illuminate\Support\Facades\DB;
                 confirmButtonText: 'Ya, Scan'
             }).then((result) => {
                 if (result.isConfirmed) {
+                    // Get current local time
+                    const now = new Date();
+                    const localTime = now.toISOString();
+
                     $.ajax({
                         url: '{{ route("scan.store") }}',
                         method: 'POST',
                         data: {
                             kode: nomorPeserta,
+                            local_time: localTime,
                             _token: '{{ csrf_token() }}'
                         },
                         dataType: 'json',
@@ -544,8 +565,6 @@ use Illuminate\Support\Facades\DB;
 
         // Show peserta belum scan in modal
         function showPesertaBelumScan(rombongan, regu) {
-            // console.log('Requesting data for rombongan:', rombongan, 'regu:', regu);
-
             $.ajax({
                 url: '/scan/belum-scan',
                 type: 'GET',
@@ -555,30 +574,29 @@ use Illuminate\Support\Facades\DB;
                 },
                 dataType: 'json',
                 success: function(response) {
-                    console.log('Response:', response);
                     if (response.success) {
                         let html = '';
                         if (response.data.length > 0) {
                             response.data.forEach(peserta => {
                                 html += `
-                        <div class="list-group-item">
-                            <div class="media">
-                                <img src="{{ asset('image') }}/${peserta.foto || 'icon.png'}" 
-                                     class="mr-3" width="50" height="50">
-                                <div class="media-body">
-                                    <h5>${peserta.nama_peserta}</h5>
-                                    <div>
-                                        <span class="badge bg-info" style="color: white;">Rombongan ${peserta.rombongan}</span>
-                                        <span class="badge bg-secondary" style="color: white;">Regu ${peserta.regu}</span>
-                                        <span class="badge bg-primary" style="color: white;">No. ${peserta.nomor_peserta}</span>
+                                <div class="list-group-item">
+                                    <div class="media">
+                                        <img src="{{ asset('image') }}/${peserta.foto || 'icon.png'}" 
+                                             class="mr-3" width="50" height="50">
+                                        <div class="media-body">
+                                            <h5>${peserta.nama_peserta}</h5>
+                                            <div>
+                                                <span class="badge bg-info" style="color: white;">Rombongan ${peserta.rombongan}</span>
+                                                <span class="badge bg-secondary" style="color: white;">Regu ${peserta.regu}</span>
+                                                <span class="badge bg-primary" style="color: white;">No. ${peserta.nomor_peserta}</span>
+                                            </div>
+                                            <button class="btn btn-sm btn-primary mt-2" 
+                                                    onclick="scanPeserta('${peserta.nomor_peserta}')">
+                                                <i class="fas fa-check"></i> Scan
+                                            </button>
+                                        </div>
                                     </div>
-                                    <button class="btn btn-sm btn-primary mt-2" 
-                                            onclick="scanPeserta('${peserta.nomor_peserta}')">
-                                        <i class="fas fa-check"></i> Scan
-                                    </button>
-                                </div>
-                            </div>
-                        </div>`;
+                                </div>`;
                             });
                         } else {
                             html = '<div class="alert alert-info">Tidak ada peserta yang ditemukan</div>';
@@ -623,6 +641,45 @@ use Illuminate\Support\Facades\DB;
             timer: 3000
         });
         @endif
+    </script>
+    <script>
+        // Function to update Saudi Arabia time
+        function updateSaudiTime() {
+            const options = {
+                timeZone: 'Asia/Riyadh',
+                hour12: false,
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            };
+
+            const formatter = new Intl.DateTimeFormat('id-ID', options);
+            const parts = formatter.formatToParts(new Date());
+
+            let date = {},
+                time = {};
+            parts.forEach(part => {
+                if (part.type === 'day') date.day = part.value;
+                else if (part.type === 'month') date.month = part.value;
+                else if (part.type === 'year') date.year = part.value;
+                else if (part.type === 'hour') time.hour = part.value;
+                else if (part.type === 'minute') time.minute = part.value;
+                else if (part.type === 'second') time.second = part.value;
+            });
+
+            const saudiTimeStr = `${date.year}-${date.month}-${date.day} ${time.hour}:${time.minute}:${time.second}`;
+            document.getElementById('saudiTime').textContent = saudiTimeStr;
+        }
+
+        // Update immediately and then every second
+        updateSaudiTime();
+        setInterval(updateSaudiTime, 1000);
+
+        // Rest of your existing JavaScript code
+        // ...
     </script>
 </body>
 
